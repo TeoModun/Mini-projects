@@ -1,0 +1,106 @@
+<html>
+<head>
+<!-- Nikola Filipovic -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="data.json"></script>
+</head>
+<body>
+
+<p><u><b>Podaci:</b></u></p>
+<table style="border: 1px solid black;" id="tekst"></table>
+
+<input type="number" id="euri"> kn= <span id="kune"></span>€
+<br>
+<input type="number" id="euro"> €= <span id="kuna"></span>kn
+
+<!-- GET JSON DATA -->
+<script>
+
+$(document).ready(function() {
+	var mydata = JSON.parse(data);
+	
+	$("#tekst").append("<tr>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Broj tečajnice');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Datum primjene');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Država');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Šifra valute');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Valuta');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Jedinica');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Kupovni za devize');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Srednji za devize');
+	$("#tekst").append("</td>");
+	$("#tekst").append("<td>");
+	$("#tekst").append('Prodajni za devize');
+	$("#tekst").append("</td>");
+	$("#tekst").append("</tr>");
+
+
+	for	(var i in mydata)
+	{
+		$("#tekst").append("<tr>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Broj tečajnice']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Datum primjene']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Država']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Šifra valute']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Valuta']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Jedinica']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Kupovni za devize']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Srednji za devize']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("<td>");
+		$("#tekst").append(mydata[i]['Prodajni za devize']);
+		$("#tekst").append("</td>");
+		$("#tekst").append("</tr>");
+	}
+
+	$("#euri").keyup(function(){
+	var euro =$("#euri").val();
+	var kuna = mydata[12]['Kupovni za devize'].replace(",",".");
+	$("#kune").text(euro/kuna);
+	});
+
+	$("#euro").keyup(function(){
+	var euro =$("#euro").val();
+	var kuna = mydata[12]['Kupovni za devize'].replace(",",".");
+	$("#kuna").text(euro*kuna);
+	});
+
+
+	console.log(mydata);
+	
+
+});
+
+</script>
+</body>
+</html>

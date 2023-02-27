@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA</title>
+   <link rel="stylesheet" href="./style.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<style>
+		.fetched_info, .data-players, .data-games{
+			display: block
+		}
+		.content{
+			height:auto;
+		}
+	</style>
+	
+	<!-- https://www.thesportsdb.com/api/v1/json/40130162/lookup_all_players.php?id=134864 -->
+</head>
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;500&display=swap" rel="stylesheet">
+
+<body>
+	<div class="dash">
+
+		<div class="dash-left">
+			<div class="logo"><img src="https://www.pikpng.com/pngl/b/473-4739689_rsvp-betekenis-logo-the-score-band-clipart.png" alt=""></div>
+		</div>
+		
+		
+		<div class="dash-right">
+			<div class="hdr"><!-- preko JS ubaciti background na ovaj div--></div>
+	
+			<div class="fetched_info">
+				<div class="fetched-content">
+					<div class="content data-overview content-active">			
+						<div class="o_games-hdr">Team Profile</div>
+						<div class="o_desc"><!-- preko JS dohvatit ovdje description tima--></div>			
+					</div>
+				
+
+					<div class="content data-players">
+						<h4>Players</h4>
+						<div class="players games-flex">
+							<!--<div class="players-item">	
+									<div class="players-item-image"><img src="....."></div>
+									<div class="players-item-desc">
+										<div class="players-name">Aron Baynes</div>
+										<div class="players-position">Center</div>
+									</div>
+							</div> -->
+						</div>
+					</div>
+					<div class="footer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	$(document).ready(function(){
+		$(".hdr").append("<img src ='https://www.thesportsdb.com/images/media/team/stadium/yxrssy1423095391.jpg'>");
+
+		$.getJSON("https://www.thesportsdb.com/api/v1/json/40130162/lookupteam.php?id=134864", function(podaci){
+			console.log(podaci);
+			$(".o_desc").append("<p>"+podaci.teams["0"]["strDescriptionEN"]+"</p>");
+
+		$.getJSON("https://www.thesportsdb.com/api/v1/json/40130162/lookup_all_players.php?id=134864", function(data){
+			console.log(data);
+
+			var ispis = "";
+			for(var i in data.player){
+				console.log(data.player[i]);
+				ispis += "<div class = 'players-item'>";
+				ispis += "<div class = 'players-item-image'><img src='" + data.player[i]["strCutout"] + "'></div>";
+				ispis += "<div class = 'players-item-desc'>";
+				ispis += "<div class = 'players-name'>" + data.player[i]["strPlayer"] + "</div>";
+				ispis += "<div class='players-position'>" +data.player[i]["strPosition"] + "</div>"
+				ispis += "</div>"
+				ispis += "</div>" 
+			}
+			console.log(ispis);
+			$("#players games-flex").innerHTML=ispis;
+			document.getElementsByClassName("players")[0].innerHTML = ispis;
+
+			
+		});
+		});
+	});
+</script>
+</html>

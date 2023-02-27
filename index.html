@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        .boja{
+            padding: 15px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="prvi">
+
+    </div>
+    <script>
+        $(document).ready(function(){
+            $.getJSON("https://color-names.herokuapp.com/v1/", function(data){
+                console.log(data);
+
+            var i = 0;
+            for(var i in data.colors){
+                $("#prvi").append("<div class = 'boja' style = 'background-color:"+data.colors[i]['hex']+"'>"+data.colors[i]['name']+"</div>");
+            }
+            });
+        });
+    </script>    
+</body>
+</html>

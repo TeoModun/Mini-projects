@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Airport Search JSON with Autocomplete</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 16px;
+}
+
+html {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 100%;
+  color: #2f2f2f;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+h1 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+h2 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+h3 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+h4 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+h5 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.airport-search, .header {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+@media (max-width: 425px) {
+  .airport-search, .header {
+    padding: 1rem;
+  }
+}
+
+.title {
+  font-family: "Inter", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: 0.02em;
+}
+
+.airport-search__title {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.airport-search p {
+  margin-bottom: 1rem;
+}
+.airport-search__input {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 3rem;
+  display: block;
+  width: 100%;
+  background-color: #ececec;
+  border: 0;
+  outline: 0;
+  padding: 0.5rem 2rem;
+}
+@media (max-width: 768px) {
+  .airport-search__input {
+    font-size: 2rem;
+  }
+}
+
+.airport-search__results {
+  transition: all 1s ease;
+}
+
+.airport-search__result {
+  background-color: #191919;
+  padding: 1rem 2rem;
+  color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  animation: fadeIn 1s ease forwards;
+}
+.airport-search__result:last-child {
+  border-bottom: 0;
+}
+.airport-search__result:nth-of-type(even) {
+  background-color: #2a2a2a;
+}
+
+.airport__location, .airport__id {
+  display: flex;
+  align-items: center;
+}
+
+.airport__country, .airport__city {
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+}
+
+.airport__id {
+  height: 100%;
+}
+@media (max-width: 768px) {
+  .airport__id {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.airport__iata {
+  background-color: white;
+  color: #2f2f2f;
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  line-height: 3rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+}
+
+.airport__name {
+  font-size: 3rem;
+  margin-left: 2rem;
+}
+@media (max-width: 768px) {
+  .airport__name {
+    font-size: 2rem;
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
+
+.airport__location {
+  margin-left: calc(3rem + 2rem);
+}
+@media (max-width: 768px) {
+  .airport__location {
+    align-items: flex-start;
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: translateY(2rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+<header class="header">
+      <h1 class="title">friends airline</h1>
+    </header>
+    <main class="airport-search">
+      <h2 class="airport-search__title">Select an airport</h2>
+      <p>Search by name of the airport, country,city or iata code</p>
+      <input
+        placeholder="e.g Chile"
+        id="search"
+        type="text"
+        class="airport-search__input"
+      />
+      <div id="airportList" class="airport-search__results">
+      </div>
+    </main>
+<script>
+    
+//Izradio Nikola Filipovic
+$(document).ready(function() { 
+    var command;
+    $( "#search" ).keyup(function() {
+        document.getElementById("airportList").innerHTML = "";
+        command = "";
+        $.getJSON('https://raw.githubusercontent.com/algolia/datasets/master/airports/airports.json', function(data) {
+            for(var i in data)
+            {
+                if(data[i].name.toLowerCase().startsWith($("#search").val()))    
+                {
+                    command += '<div class="airport-search__result"><div class="airport__id">' + data[i].objectID + '<div class="airport__iata">'+ data[i].iata_code +'</div><h3 class="airport__name">'+ data[i].name +'</h3></div><div class="airport__location">'+ "lat. " + data[i]._geoloc.lat + ", lng. " + data[i]._geoloc.lng +'<p class="airport__city">'+ data[i].city +'</p><p class="airport__country">'+ ", " + data[i].country +'</p></div></div>';
+
+                    document.getElementById("airportList").innerHTML = command;
+                }
+            }
+        });
+    });
+});     
+</script>
+</body>
+</html>
